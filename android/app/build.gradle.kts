@@ -25,12 +25,12 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.anvira"
+    namespace = "com.anvira.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {
-        applicationId = "com.anvira"
+        applicationId = "com.anvira.app"
         minSdk = flutter.minSdkVersion
         targetSdk = 37
         versionCode = flutterVersionCode
@@ -40,16 +40,21 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as? String ?: ""
+            keyPassword = keystoreProperties["keyPassword"] as? String ?: ""
             storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String
+            storePassword = keystoreProperties["storePassword"] as? String ?: ""
         }
     }
     
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            val releaseSigningConfig = signingConfigs.getByName("release")
+            if (releaseSigningConfig.storeFile != null && releaseSigningConfig.storeFile!!.exists()) {
+                signingConfig = releaseSigningConfig
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
+            }
         }
     }
 

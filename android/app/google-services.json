@@ -1,51 +1,26 @@
 {
   "project_info": {
-    "project_number": "346142227155",
-    "project_id": "webinar-c51b7",
-    "storage_bucket": "webinar-c51b7.appspot.com"
+    "project_number": "503132857091",
+    "project_id": "anvira-education",
+    "storage_bucket": "anvira-education.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:346142227155:android:ea2e14d4ed957a79d23226",
+        "mobilesdk_app_id": "1:503132857091:android:474c1f2d6044e9030bff36",
         "android_client_info": {
-          "package_name": "com.anvira"
+          "package_name": "com.anvira.app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "346142227155-r6jiebtjasattjoboiqaib9pj4v6qglm.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.anvira",
-            "certificate_hash": "4691591c4261760895fe0df7733a48228ef79926"
-          }
-        },
-        {
-          "client_id": "346142227155-rmrbm5ro6r8d038s3u9cph7umvjrrvks.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyATOMUHqK1GBarcT394Drm6RFi50LsX3wQ"
+          "current_key": "AIzaSyDRVLZIrp_eZAyg6xmgMxik7KkEE4M1Tiw"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "346142227155-be19v4v7jj1dh2eqb2avp2tmnghahoc8.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "346142227155-30a9drvvvduc0qboegip572sh6e30aeg.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.anvira"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

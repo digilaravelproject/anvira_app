@@ -1,4 +1,4 @@
-package com.anvira
+package com.anvira.app
 
 import io.flutter.embedding.android.FlutterActivity
 // import com.facebook.FacebookSdk;
