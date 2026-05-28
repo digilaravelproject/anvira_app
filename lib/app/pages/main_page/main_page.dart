@@ -109,10 +109,16 @@ class _MainPageState extends State<MainPage> {
 
     if( !kIsWeb ){
       if(Platform.isIOS){
-
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
           SystemUiOverlay.top
         ]);
+      } else if(Platform.isAndroid){
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarDividerColor: Colors.transparent,
+        ));
       }
     }
 
@@ -190,12 +196,13 @@ class _MainPageState extends State<MainPage> {
                 child: Consumer<PageProvider>(
                   builder: (context, pageProvider, _) {
                     return SafeArea(
-                      bottom: !kIsWeb && Platform.isAndroid,
+                      bottom: false,
                       top: false,
                       child: Scaffold(
                         backgroundColor: Colors.transparent,
                         resizeToAvoidBottomInset: false,
                         extendBody: true,
+                        extendBodyBehindAppBar: true,
       
                         body: pageProvider.pages[pageProvider.page],
                     
@@ -249,8 +256,8 @@ class _MainPageState extends State<MainPage> {
                                           pageProvider.setPage(PageNames.categories);
                                         }),
                                         
-                                        MainWidget.navItem(PageNames.providers, pageProvider.page, appText.providers, AppAssets.provideresSvg, (){
-                                          pageProvider.setPage(PageNames.providers);
+                                        MainWidget.navItem(PageNames.myClasses, pageProvider.page, appText.myClassess, AppAssets.classesSvg, (){
+                                          pageProvider.setPage(PageNames.myClasses);
                                         }),
                                                 
                                                 
@@ -263,8 +270,8 @@ class _MainPageState extends State<MainPage> {
                                           pageProvider.setPage(PageNames.blog);
                                         }),
                                         
-                                        MainWidget.navItem(PageNames.myClasses, pageProvider.page, appText.myClassess, AppAssets.classesSvg, (){
-                                          pageProvider.setPage(PageNames.myClasses);
+                                        MainWidget.navItem(PageNames.setting, pageProvider.page, appText.settings, AppAssets.settingSvg, (){
+                                          pageProvider.setPage(PageNames.setting);
                                         }),
                                                 
                                       ],

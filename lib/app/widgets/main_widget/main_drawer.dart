@@ -34,6 +34,7 @@ import '../../pages/main_page/home_page/favorites_page/favorites_page.dart';
 import '../../pages/main_page/home_page/quizzes_page/quizzes_page.dart';
 import '../../pages/main_page/home_page/subscription_page/subscription_page.dart';
 import '../../pages/main_page/home_page/support_message_page/support_message_page.dart';
+import '../../pages/main_page/providers_page/providers_page.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
@@ -95,7 +96,8 @@ class _MainDrawerState extends State<MainDrawer> {
                             GestureDetector(
                               onTap: (){
                                 if(hasAccess()){
-                                  nextRoute(SettingPage.pageName);
+                                  locator<PageProvider>().setPage(PageNames.setting);
+                                  drawerController.hideDrawer();
                                 }
                               },
                               behavior: HitTestBehavior.opaque,
@@ -209,6 +211,10 @@ class _MainDrawerState extends State<MainDrawer> {
 
                               drawerController.hideDrawer();
                             }
+                          }),
+                          
+                          menuItem(appText.providers, AppAssets.provideresSvg, (){
+                            nextRoute(ProvidersPage.pageName);
                           }),
                           
                           menuItem(appText.meetings, AppAssets.meetingsSvg, (){
@@ -487,11 +493,21 @@ class _MainDrawerState extends State<MainDrawer> {
         child: Row(
           children: [
             
-            SvgPicture.asset(
-              iconPath,
+            SizedBox(
+              width: 22,
+              height: 22,
+              child: Center(
+                child: SvgPicture.asset(
+                  iconPath,
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
+              ),
             ),
       
-            space(0,width: 8),
+            space(0,width: 12),
       
             Text(
               name,

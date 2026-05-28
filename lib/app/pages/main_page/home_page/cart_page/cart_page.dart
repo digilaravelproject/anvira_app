@@ -286,7 +286,7 @@ class _CartPageState extends State<CartPage> {
                                       arguments: [
                                         link, 
                                         '',
-                                        true,
+                                        false,
                                         LoadRequestMethod.get
                                       ]
                                     );

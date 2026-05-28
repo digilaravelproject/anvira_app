@@ -292,7 +292,7 @@ class HomeWidget{
                   
                           input(nameController, nameNode, appText.yourName, iconPathLeft: AppAssets.profileSvg, leftIconSize: 14,isBorder: true),
                           
-                          if(PublicData.apiConfigData?['referralSettings']['status'] ?? false)...{
+                          if(PublicData.apiConfigData?['referralSettings']?['status'] ?? false)...{
 
                             space(16),
                     

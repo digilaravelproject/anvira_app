@@ -6,9 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:webinar/app/models/login_history_model.dart';
+import 'package:provider/provider.dart';
 import 'package:webinar/app/pages/authentication_page/login_page.dart';
 import 'package:webinar/app/providers/app_language_provider.dart';
 import 'package:webinar/app/providers/user_provider.dart';
+import 'package:webinar/app/providers/drawer_provider.dart';
+import 'package:webinar/config/assets.dart';
 import 'package:webinar/app/services/guest_service/guest_service.dart';
 import 'package:webinar/app/services/guest_service/location_service.dart';
 import 'package:webinar/app/services/user_service/user_service.dart';
@@ -20,6 +23,7 @@ import 'package:webinar/common/database/app_database.dart';
 import 'package:webinar/common/enums/error_enum.dart';
 import 'package:webinar/common/utils/app_text.dart';
 import 'package:webinar/common/utils/role_translator.dart';
+import 'package:webinar/common/utils/object_instance.dart';
 import 'package:webinar/config/styles.dart';
 import 'package:webinar/locator.dart';
 
@@ -28,7 +32,8 @@ import '../../../../models/location_model.dart';
 
 class SettingPage extends StatefulWidget {
   static const String pageName = '/profile';
-  const SettingPage({super.key});
+  final bool isTab;
+  const SettingPage({super.key, this.isTab = false});
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -96,47 +101,58 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
   List<LoginHistoryModel> loginHistory = [];
 
 
+  bool hasLogin = false;
+  bool isLoadingToken = true;
+
   @override
   void initState() {
     super.initState();
     
     tabController = TabController(length: 4, vsync: this);
 
-    emailController.text = locator<UserProvider>().profile?.email ?? '';
-    nameController.text = locator<UserProvider>().profile?.fullName ?? '';
-    phoneController.text = locator<UserProvider>().profile?.mobile ?? '';
-    refUrlController.text = locator<UserProvider>().profile?.mobile ?? '';
+    AppData.getAccessToken().then((value) {
+      hasLogin = value.isNotEmpty;
+      if (hasLogin) {
+        emailController.text = locator<UserProvider>().profile?.email ?? '';
+        nameController.text = locator<UserProvider>().profile?.fullName ?? '';
+        phoneController.text = locator<UserProvider>().profile?.mobile ?? '';
+        refUrlController.text = locator<UserProvider>().profile?.mobile ?? '';
 
-    newsletter = locator<UserProvider>().profile?.newsletter ?? false;
+        newsletter = locator<UserProvider>().profile?.newsletter ?? false;
 
-    addressController.text = locator<UserProvider>().profile?.address ?? '';
-    ibanController.text = locator<UserProvider>().profile?.iban ?? '';
-    accountIdController.text = locator<UserProvider>().profile?.accountId ?? '';
+        addressController.text = locator<UserProvider>().profile?.address ?? '';
+        ibanController.text = locator<UserProvider>().profile?.iban ?? '';
+        accountIdController.text = locator<UserProvider>().profile?.accountId ?? '';
 
-    timeZoneSelected = locator<UserProvider>().profile?.timezone;
-    provinceSelectedId = locator<UserProvider>().profile?.provinceId;
-    citySelectedId = locator<UserProvider>().profile?.cityId;
-    districtSelectedId = locator<UserProvider>().profile?.districtId;
+        timeZoneSelected = locator<UserProvider>().profile?.timezone;
+        provinceSelectedId = locator<UserProvider>().profile?.provinceId;
+        citySelectedId = locator<UserProvider>().profile?.cityId;
+        districtSelectedId = locator<UserProvider>().profile?.districtId;
 
+        LocationService.getCountries().then((value) {
+          countries = value;
+          if (locator<UserProvider>().profile?.countryId != null) {
+            try {
+              selectedCountry = countries.singleWhere((element) => element.id == (locator<UserProvider>().profile?.countryId));
+            } catch (_) {}
+          }
+          setState(() {});
+        });
 
+        GuestService.getTimeZone().then((value) {
+          timeZoneData = value;
+          setState(() {});
+        });
 
-    LocationService.getCountries().then((value) {
-      countries = value;
-      selectedCountry = countries.singleWhere((element) => element.id == (locator<UserProvider>().profile?.countryId));
-
-      setState(() {});
+        UserService.getLoginHistory().then((value){
+          loginHistory = value;
+          setState(() {});
+        });
+      }
+      setState(() {
+        isLoadingToken = false;
+      });
     });
-
-    GuestService.getTimeZone().then((value) {
-      timeZoneData = value;
-      setState(() {});
-    });
-
-    UserService.getLoginHistory().then((value){
-      loginHistory = value;
-      setState(() {});
-    });
-
   }
 
 
@@ -159,16 +175,103 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return directionality(
-      child: Scaffold(
+    double bottomSpace = widget.isTab ? 120.0 : 30.0;
 
-        appBar: appbar(title: appText.settings),
+    Widget buildSaveButton({bool hasHorizontalPadding = false}) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: hasHorizontalPadding ? 21.0 : 0.0, vertical: 10.0),
+        child: button(
+          onTap: () async {
+            setState(() {
+              isLoading = true;
+            });
 
-        body: Stack(
-          children: [
+            bool res = await UserService.updateInfo(
+              emailController.text.trim().toEnglishDigit(), 
+              nameController.text.trim().toEnglishDigit(), 
+              phoneController.text.trim().toEnglishDigit(), 
+              timeZoneSelected ?? '', 
+              newsletter, 
+              ibanController.text.trim().toEnglishDigit(), 
+              accountTypeController.text.trim().toEnglishDigit(), 
+              accountIdController.text.trim().toEnglishDigit(), 
+              addressController.text.trim().toEnglishDigit(), 
+              selectedCountry?.id, 
+              provinceSelectedId, citySelectedId, districtSelectedId
+            );
+            
+            if(res){
+              if(currentPasswordController.text.trim().isNotEmpty && newPasswordController.text.trim().isNotEmpty){
+                if(newPasswordController.text.trim().compareTo(retypePasswordController.text.trim()) == 0){
+                  await UserService.updatePassword(
+                    currentPasswordController.text.trim().toEnglishDigit(), 
+                    newPasswordController.text.trim().toEnglishDigit(),
+                  ); 
+                }else{
+                  showSnackBar(ErrorEnum.success, appText.passwordAndRetypePassNotMatch);
+                }
+              }
 
-            Positioned.fill(
-              child: NestedScrollView(
+              if(localImage != null || indentityScanImage != null || certificateImage != null){
+                await UserService.updateImage(localImage, indentityScanImage, certificateImage);
+              }
+
+              if(mounted){
+                if (widget.isTab) {
+                  showSnackBar(ErrorEnum.success, appText.successfulyRequest);
+                } else {
+                  backRoute();
+                }
+              }
+            }
+            
+            setState(() {
+              isLoading = false;
+            });
+          }, 
+          width: getSize().width, 
+          height: 51, 
+          text: appText.save, 
+          bgColor: green77(), 
+          textColor: Colors.white,
+          isLoading: isLoading
+        ),
+      );
+    }
+
+    Widget buildBody() {
+      return Scaffold(
+        appBar: appbar(
+          title: appText.settings,
+          leftIcon: widget.isTab ? AppAssets.menuSvg : AppAssets.backSvg,
+          onTapLeftIcon: widget.isTab ? () {
+            drawerController.showDrawer();
+          } : backRoute,
+        ),
+        body: isLoadingToken
+            ? loading()
+            : !hasLogin
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      emptyState(AppAssets.loginEmptyStateSvg, appText.login, appText.loginDesc, isBottomPadding: false),
+                      space(16, width: getSize().width),
+                      button(
+                        onTap: () {
+                          nextRoute(LoginPage.pageName);
+                        },
+                        width: getSize().width * .65,
+                        height: 52,
+                        text: appText.login,
+                        bgColor: green77(),
+                        textColor: Colors.white,
+                        raduis: 16,
+                      ),
+                      space(getSize().height * .15),
+                    ],
+                  )
+                : NestedScrollView(
+                physics: const BouncingScrollPhysics(),
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
                   return [
                     // image and name
@@ -222,25 +325,6 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
                                   ),
                                 ),
                               ),
-
-
-                              // Positioned(
-                              //   bottom: -10,
-                              //   left: 0,
-                              //   right: 0,
-                              //   child: Container(
-                              //     width: 35,
-                              //     height: 35,
-
-                              //     decoration: const BoxDecoration(
-                              //       shape: BoxShape.circle,
-                              //       color: Colors.white
-                              //     ),
-
-                              //     alignment: Alignment.center,
-                              //     child: SvgPicture.asset(AppAssets.cameraSvg),
-                              //   )
-                              // )
                             ],
                           ),
 
@@ -279,7 +363,6 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
 
                   ];
                 },
-                physics: const BouncingScrollPhysics(),
                 body: TabBarView(
                   controller: tabController,
                   physics: const BouncingScrollPhysics(),
@@ -294,7 +377,9 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
                       (val){
                         newsletter = val;
                         setState(() {});
-                      }
+                      },
+                      buildSaveButton(hasHorizontalPadding: false),
+                      bottomSpace,
                     ),
                     
                     
@@ -310,13 +395,13 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
                         });
                         
                         bool? res = await UserService.deleteAccount();
-
+ 
                         if(res){
                           
                           await AppData.saveCurrency('');
                           AppData.saveAccessToken('');
                           AppDataBase.clearBox();
-
+ 
                           
                           locator<UserProvider>().clearAll();
                           locator<AppLanguageProvider>().changeState();
@@ -332,7 +417,9 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
                       (){
                         showMoreLoginHistory = !showMoreLoginHistory;
                         setState(() {});
-                      }
+                      },
+                      buildSaveButton(hasHorizontalPadding: true),
+                      bottomSpace,
                     ),
               
               
@@ -367,7 +454,9 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
               
                           setState(() {});
                         }
-                      }
+                      },
+                      buildSaveButton(hasHorizontalPadding: false),
+                      bottomSpace,
                     ),
                     
               
@@ -403,106 +492,30 @@ class _SettingPageState extends State<SettingPage> with TickerProviderStateMixin
                         districtSelectedId = id;
                         setState(() {});
                       },
-              
+                      buildSaveButton(hasHorizontalPadding: false),
+                      bottomSpace,
                     )
-              
                   ]
                 ),
-                
-              )
-            ),
-
-
-
-
-            // button
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 500),
-              bottom: 0,
-              child: Container(
-                width: getSize().width,
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 20,
-                  bottom: 30
-                ),
-
-                decoration: BoxDecoration(
-                  color: whiteFF_26,
-                  boxShadow: [
-                    boxShadow(Colors.black.withOpacity(.1),blur: 15,y: -3)
-                  ],
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30))
-                ),
-
-                child: Center(
-                  child: button(
-                    onTap: () async {
-                
-                      setState(() {
-                        isLoading = true;
-                      });
-
-                      
-                      bool res = await UserService.updateInfo(
-                        emailController.text.trim().toEnglishDigit(), 
-                        nameController.text.trim().toEnglishDigit(), 
-                        phoneController.text.trim().toEnglishDigit(), 
-                        timeZoneSelected ?? '', 
-                        newsletter, 
-                        ibanController.text.trim().toEnglishDigit(), 
-                        accountTypeController.text.trim().toEnglishDigit(), 
-                        accountIdController.text.trim().toEnglishDigit(), 
-                        addressController.text.trim().toEnglishDigit(), 
-                        selectedCountry?.id, 
-                        provinceSelectedId, citySelectedId, districtSelectedId
-                      );
-                
-                      
-                      if(res){
-                        if(currentPasswordController.text.trim().isNotEmpty && newPasswordController.text.trim().isNotEmpty){
-
-                          if(newPasswordController.text.trim().compareTo(retypePasswordController.text.trim()) == 0){
-                            await UserService.updatePassword(
-                              currentPasswordController.text.trim().toEnglishDigit(), 
-                              newPasswordController.text.trim().toEnglishDigit(),
-                            ); 
-                          }else{
-                            showSnackBar(ErrorEnum.success, appText.passwordAndRetypePassNotMatch);
-                          }
-                        }
-
-
-                        if(localImage != null || indentityScanImage != null || certificateImage != null){
-                          await UserService.updateImage(localImage, indentityScanImage, certificateImage);
-                        }
-
-                        if(mounted){
-                          backRoute();
-                        }
-                      }
-                      
-                      setState(() {
-                        isLoading = false;
-                      });
-                    }, 
-                    width: getSize().width, 
-                    height: 51, 
-                    text: appText.save, 
-                    bgColor: green77(), 
-                    textColor: Colors.white,
-                    isLoading: isLoading
-                  ),
-                ),
-              
               ),
-            ),
+      );
+    }
 
-
-          ],
-        ),
-      )
-    );
+    if (widget.isTab) {
+      return directionality(
+        child: Consumer<DrawerProvider>(
+          builder: (context, drawerProvider, _) {
+            return ClipRRect(
+              borderRadius: borderRadius(radius: drawerProvider.isOpenDrawer ? 20 : 0),
+              child: buildBody(),
+            );
+          }
+        )
+      );
+    } else {
+      return directionality(
+        child: buildBody()
+      );
+    }
   }
 }

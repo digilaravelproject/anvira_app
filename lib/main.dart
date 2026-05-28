@@ -64,6 +64,7 @@ import 'app/pages/main_page/home_page/quizzes_page/quiz_info_page.dart';
 import 'app/pages/main_page/home_page/quizzes_page/quiz_page.dart';
 import 'app/pages/main_page/home_page/quizzes_page/quizzes_page.dart';
 import 'app/pages/main_page/providers_page/user_profile_page/user_profile_page.dart';
+import 'app/pages/main_page/providers_page/providers_page.dart';
 import 'app/pages/main_page/home_page/search_page/result_search_page.dart';
 import 'app/pages/main_page/home_page/search_page/suggested_search_page.dart';
 import 'app/pages/main_page/home_page/subscription_page/subscription_page.dart';
@@ -194,6 +195,7 @@ class MyApp extends StatelessWidget {
               WebViewPage.pageName : (context) => const WebViewPage(),
               BankAccountsPage.pageName : (context) => const BankAccountsPage(),
               UserProfilePage.pageName : (context) => const UserProfilePage(),
+              ProvidersPage.pageName : (context) => const ProvidersPage(),
               AssignmentsPage.pageName : (context) => const AssignmentsPage(),
               AssignmentOverviewPage.pageName : (context) => const AssignmentOverviewPage(),
               SubmissionsPage.pageName : (context) => const SubmissionsPage(),

@@ -53,10 +53,10 @@ class _LoginPageState extends State<LoginPage> {
   bool isSendingData=false;
 
   CountryCode countryCode = CountryCode(
-    code: "US",
-    dialCode: "+1",
-    flagUri: "${AppAssets.flags}en.png",
-    name: "United States"
+    code: "IN",
+    dialCode: "+91",
+    flagUri: "${AppAssets.flags}in.png",
+    name: "India"
   );
 
   @override
@@ -258,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                       space(25),
       
                       // Other Register Method
-                      if(PublicData.apiConfigData?['showOtherRegisterMethod'] ?? false)...{
+                      if(PublicData.apiConfigData?['showOtherRegisterMethod'] == '1')...{
                         space(15),
       
                         Container(

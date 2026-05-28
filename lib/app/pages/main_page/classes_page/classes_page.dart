@@ -40,6 +40,7 @@ class _ClassesPageState extends State<ClassesPage> with TickerProviderStateMixin
   List<CourseModel> invitations = [];
 
   bool hasLogin = false;
+  bool isLoadingToken = true;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _ClassesPageState extends State<ClassesPage> with TickerProviderStateMixin
 
     AppData.getAccessToken().then((value) {
       hasLogin = value.isNotEmpty;
+      isLoadingToken = false;
       setState(() {});
     });
     
@@ -108,27 +110,29 @@ class _ClassesPageState extends State<ClassesPage> with TickerProviderStateMixin
                     drawerController.showDrawer();
                   }),
                 
-                  body: !hasLogin
+                  body: isLoadingToken
+                ? Center(child: loading())
+                : !hasLogin
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                
+
                       emptyState(AppAssets.loginEmptyStateSvg, appText.login, appText.loginDesc, isBottomPadding: false),
-                
-                      space(16,width: getSize().width),
-                
+
+                      space(16, width: getSize().width),
+
                       button(
-                        onTap: (){
+                        onTap: () {
                           nextRoute(LoginPage.pageName);
-                        }, 
-                        width: getSize().width * .65, 
-                        height: 52, 
-                        text: appText.login, 
-                        bgColor: green77(), 
+                        },
+                        width: getSize().width * .65,
+                        height: 52,
+                        text: appText.login,
+                        bgColor: green77(),
                         textColor: Colors.white,
-                        raduis: 16
+                        raduis: 16,
                       ),
-                
+
                       space(getSize().height * .15),
                     ],
                   )

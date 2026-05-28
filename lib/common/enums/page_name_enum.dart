@@ -3,5 +3,6 @@ enum PageNames{
   blog,
   providers,
   categories,
-  myClasses
+  myClasses,
+  setting
 }

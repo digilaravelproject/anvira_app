@@ -33,10 +33,10 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   bool isPhoneNumber=true;
   
   CountryCode countryCode = CountryCode(
-    code: "US",
-    dialCode: "+1",
-    flagUri: "${AppAssets.flags}en.png",
-    name: "United States"
+    code: "IN",
+    dialCode: "+91",
+    flagUri: "${AppAssets.flags}in.png",
+    name: "India"
   );
 
   @override

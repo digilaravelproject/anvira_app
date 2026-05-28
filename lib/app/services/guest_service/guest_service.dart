@@ -76,8 +76,8 @@ class GuestService{
 
       if(res.statusCode == 200){
         
-        PublicData.apiConfigData = jsonResponse['data'];
-        return jsonResponse['data'];
+        PublicData.apiConfigData = jsonResponse;
+        return jsonResponse;
       }else{
 
         return null;

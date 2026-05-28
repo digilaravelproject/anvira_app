@@ -266,16 +266,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               });
 
 
+                              // nextRoute(
+                              //   WebViewPage.pageName,
+                              //   arguments: [
+                              //     '${Constants.baseUrl}panel/payments/request?gateway_id=${selectedPaymentChannels!.id!}&order_id=${checkoutData!.order!.id!}',
+                              //     selectedPaymentChannels?.title ?? '',
+                              //     true,
+                              //     LoadRequestMethod.get
+                              //   ]
+                              // );
+
+                              final link = await CartService.webCheckout();
+
                               nextRoute(
-                                WebViewPage.pageName, 
+                                WebViewPage.pageName,
                                 arguments: [
-                                  '${Constants.baseUrl}panel/payments/request?gateway_id=${selectedPaymentChannels!.id!}&order_id=${checkoutData!.order!.id!}', 
+                                  link,
                                   selectedPaymentChannels?.title ?? '',
                                   true,
-                                  LoadRequestMethod.get
-                                ]
+                                  LoadRequestMethod.get,
+                                ],
                               );
-
                               setState(() {
                                 isLoadingStartPay = false;
                               });

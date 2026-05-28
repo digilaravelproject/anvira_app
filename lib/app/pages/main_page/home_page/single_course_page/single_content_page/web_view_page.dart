@@ -36,6 +36,9 @@ class _WebViewPageState extends State<WebViewPage> {
     
     cacheEnabled: true,
     javaScriptEnabled: true,
+    domStorageEnabled: true,
+    databaseEnabled: true,
+    thirdPartyCookiesEnabled: true,
     
     useHybridComposition: false,
     sharedCookiesEnabled: true,
@@ -43,7 +46,7 @@ class _WebViewPageState extends State<WebViewPage> {
     useShouldOverrideUrlLoading: true,
     useOnLoadResource: false,
 
-
+    userAgent: "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
   );
 
   CookieManager cookieManager = CookieManager.instance();
@@ -105,7 +108,13 @@ class _WebViewPageState extends State<WebViewPage> {
 
 
   load() async {
-
+    print("WebView initial load URL: $url method: $method isSendTokenInHeader: $isSendTokenInHeader");
+    try {
+      // await cookieManager.deleteAllCookies();
+      // print("WebView: Stale cookies cleared successfully.");
+    } catch (e) {
+      print("WebView: Error clearing cookies: $e");
+    }
     if(isSendTokenInHeader){
       if(csrfToken.isEmpty){
         csrfToken = await UserService.csrfToken();        
@@ -116,12 +125,12 @@ class _WebViewPageState extends State<WebViewPage> {
       if(isSendTokenInHeader)...{
         "Authorization": "Bearer $token",
         'X-CSRF-TOKEN': csrfToken, 
+        "Content-Type" : "application/json", 
+        'Accept' : 'application/json',
       },
-      "Content-Type" : "application/json", 
-      'Accept' : 'application/json',
       'x-api-key' : Constants.apiKey,
       'x-locale' : locator<AppLanguage>().currentLanguage.toLowerCase(),
-      'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      'User-Agent': "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
     };
 
     if( !(url?.startsWith('http') ?? false) ){
@@ -183,11 +192,28 @@ class _WebViewPageState extends State<WebViewPage> {
               onLoadResource: (inAppWebViewController, loadedResource){},
               
               shouldOverrideUrlLoading: (controller, navigationAction) async {
+                print("shouldOverrideUrlLoading URL: ${navigationAction.request.url} method: ${navigationAction.request.method}");
+                
+                if (!isSendTokenInHeader) {
+                  print("shouldOverrideUrlLoading ALLOW: isSendTokenInHeader is false");
+                  return NavigationActionPolicy.ALLOW;
+                }
+
+                String requestUrl = navigationAction.request.url?.toString() ?? '';
+                if (!requestUrl.startsWith(Constants.dommain)) {
+                  print("shouldOverrideUrlLoading ALLOW: URL does not match domain");
+                  return NavigationActionPolicy.ALLOW;
+                }
+
+                if (navigationAction.request.method != 'GET') {
+                  print("shouldOverrideUrlLoading ALLOW: method is not GET");
+                  return NavigationActionPolicy.ALLOW;
+                }
                 
                 if(isSendTokenInHeader){
                   if(!(navigationAction.request.headers?.containsKey('Authorization') ?? false)){
                     if(navigationAction.request.headers != null){
-                      
+                      print("shouldOverrideUrlLoading INTERCEPT: adding Authorization header and reloading");
                       navigationAction.request.headers?.addAll({"Authorization": "Bearer $token",});
                       controller.loadUrl(urlRequest: navigationAction.request);
                       return NavigationActionPolicy.ALLOW;
@@ -200,23 +226,23 @@ class _WebViewPageState extends State<WebViewPage> {
                   if(isSendTokenInHeader)...{
                     "Authorization": "Bearer $token",
                     'X-CSRF-TOKEN': csrfToken, 
+                    "Content-Type" : "application/json", 
+                    'Accept' : 'application/json',
                   },
-                  "Content-Type" : "application/json", 
-                  'Accept' : 'application/json',
                   'x-api-key' : Constants.apiKey,
                   'x-locale' : locator<AppLanguage>().currentLanguage.toLowerCase(),
-                  'User-Agent': "Mozilla/5.0 (Linux; Android 12; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Mobile Safari/537.36",
+                  'User-Agent': "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
                 };
           
                 if(navigationAction.request.headers == null || (navigationAction.request.headers?.isEmpty ?? true)){
-          
+                  print("shouldOverrideUrlLoading INTERCEPT: headers null/empty, injecting headers and reloading");
                   navigationAction.request.headers = header;
                   controller.loadUrl(urlRequest: navigationAction.request);
           
                   return NavigationActionPolicy.ALLOW;
                 }
           
-          
+                print("shouldOverrideUrlLoading ALLOW: headers already set");
                 return NavigationActionPolicy.ALLOW;
                 
               },

@@ -19,6 +19,7 @@ import '../../../models/user_model.dart';
 import '../../../providers/providers_provider.dart';
 
 class ProvidersPage extends StatefulWidget {
+  static const String pageName = '/providers';
   const ProvidersPage({super.key});
 
   @override
@@ -139,10 +140,6 @@ class _ProvidersPageState extends State<ProvidersPage> with SingleTickerProvider
             appBar: appbar(
               title: appText.providers,
               rightIcon: AppAssets.filterSvg,
-              leftIcon: AppAssets.menuSvg,
-              onTapLeftIcon: (){
-                drawerController.showDrawer();
-              },
               onTapRightIcon: () async {
                 bool? res = await baseBottomSheet(child: const ProvidersFilter());
 

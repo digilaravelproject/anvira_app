@@ -52,10 +52,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
   CountryCode countryCode = CountryCode(
-    code: "US",
-    dialCode: "+1",
-    flagUri: "${AppAssets.flags}en.png",
-    name: "United States"
+    code: "IN",
+    dialCode: "+91",
+    flagUri: "${AppAssets.flags}in.png",
+    name: "India"
   );
 
   // user
@@ -282,7 +282,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       
       
                       // Other Register Method
-                      if(registerConfig?.showOtherRegisterMethod != null)...{
+                      if(registerConfig?.showOtherRegisterMethod == '1')...{
                         space(15),
       
                         Container(

@@ -6,6 +6,7 @@ import 'package:webinar/common/enums/page_name_enum.dart';
 import '../pages/main_page/blog_page/blogs_page.dart';
 import '../pages/main_page/classes_page/classes_page.dart';
 import '../pages/main_page/providers_page/providers_page.dart';
+import '../pages/main_page/home_page/setting_page/setting_page.dart';
 
 class PageProvider extends ChangeNotifier{
 
@@ -17,6 +18,7 @@ class PageProvider extends ChangeNotifier{
     PageNames.providers : const ProvidersPage(),
     PageNames.blog : const BlogsPage(),
     PageNames.myClasses : const ClassesPage(),
+    PageNames.setting : const SettingPage(isTab: true),
   };
 
   setPage(PageNames data,{bool emit=true}){

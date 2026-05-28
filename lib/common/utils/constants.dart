@@ -4,7 +4,7 @@ class Constants {
   
     // static const dommain = 'https://app.rocket-soft.org';
 
-  static const dommain = 'https://khaki-nightingale-736279.hostingersite.com';
+  static const dommain = 'https://anviraeducation.com';
   static const baseUrl = '$dommain/api/development/';
   static const apiKey = 'anvi89';
   static const scheme = 'academyapp';

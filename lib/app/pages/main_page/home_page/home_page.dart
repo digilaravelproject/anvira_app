@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
 
           // finalize signup
           HomeWidget.showFinalizeRegister( (ModalRoute.of(context)!.settings.arguments as int) ).then((value) {
-            if(value){
+            if(value == true){
               getToken();
             }
           });

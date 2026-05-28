@@ -36,6 +36,8 @@ class SettingWidget {
 
     Function onTapChangeState,
     Function(bool value) onTapChangeNewsletter,
+    Widget saveButton,
+    double bottomSpace,
   ){
 
     languageController.text = locator<AppLanguage>().appLanguagesData[locator<AppLanguage>().appLanguagesData.indexWhere((element) => element.code!.toLowerCase() == locator<AppLanguage>().currentLanguage.toLowerCase())].name ?? '';
@@ -84,7 +86,11 @@ class SettingWidget {
             }
           ),
 
-          space(150),
+          space(12),
+
+          saveButton,
+
+          space(bottomSpace),
 
         ],
       ),
@@ -109,6 +115,8 @@ class SettingWidget {
     
     bool showMore,
     Function onTapChangeLoginHistory,
+    Widget saveButton,
+    double bottomSpace,
   ){
 
     return SingleChildScrollView(
@@ -246,8 +254,11 @@ class SettingWidget {
             ),
           },
 
-          space(150),
+          space(12),
 
+          saveButton,
+
+          space(bottomSpace),
 
         ],
       ),
@@ -273,7 +284,8 @@ class SettingWidget {
 
     Function(ImageSource source) selectIndentityImage,
     Function() selectCertificateImage,
-    
+    Widget saveButton,
+    double bottomSpace,
   ){
 
 
@@ -469,9 +481,11 @@ class SettingWidget {
           
           input(addressController, addressNode, appText.address, isBorder: true, title: appText.address),
 
-          
+          space(12),
 
-          space(150),
+          saveButton,
+
+          space(bottomSpace),
 
         ],
       ),
@@ -496,6 +510,8 @@ class SettingWidget {
 
     int? districtSelectedId,
     Function(int? val) onTapDistrict,
+    Widget saveButton,
+    double bottomSpace,
   ){
 
     bool isOpenTimeZone = false;
@@ -692,10 +708,13 @@ class SettingWidget {
                     title: appText.district,
                   );
                 },
-              )
+              ),
 
+              space(12),
 
+              saveButton,
 
+              space(bottomSpace),
 
             ],
           );

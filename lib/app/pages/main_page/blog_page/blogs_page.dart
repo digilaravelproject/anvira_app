@@ -64,19 +64,25 @@ class _BlogsPageState extends State<BlogsPage> {
   getCategories() async {
     categories = await BlogService.categories();
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   getData() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     blogData += await BlogService.getBlog(blogData.length, category: selectedCategory?.id);
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
