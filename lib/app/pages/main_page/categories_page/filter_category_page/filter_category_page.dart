@@ -316,7 +316,7 @@ class _FilterCategoryPageState extends State<FilterCategoryPage> {
 
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: TabletDetector.isTablet() ? 3 : 2,
-                              mainAxisExtent: 190,
+                              mainAxisExtent: 215,
                               crossAxisSpacing: 16,
                               mainAxisSpacing: 16
                             ),

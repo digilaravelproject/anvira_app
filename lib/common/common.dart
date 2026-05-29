@@ -81,19 +81,21 @@ baseBottomSheet({required Widget child}) async {
           
                 space(16),
           
-                GestureDetector(
-                  onTap: (){
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: Container(
-                    width: getSize().width,
-                  
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-                      color: backgroundColor,
-                    ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: (){
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Container(
+                      width: getSize().width,
                     
-                    child: child,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                        color: backgroundColor,
+                      ),
+                      
+                      child: child,
+                    ),
                   ),
                 ),
           

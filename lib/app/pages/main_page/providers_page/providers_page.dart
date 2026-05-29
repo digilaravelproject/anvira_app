@@ -198,7 +198,7 @@ class _ProvidersPageState extends State<ProvidersPage> with SingleTickerProvider
                         crossAxisCount: TabletDetector.isTablet() ? 3 : 2,
                         mainAxisSpacing: 22,
                         crossAxisSpacing: 22,
-                        mainAxisExtent: 195
+                        mainAxisExtent: 215
                       ), 
                       padding: const EdgeInsets.only(
                         right: 21,
@@ -222,7 +222,7 @@ class _ProvidersPageState extends State<ProvidersPage> with SingleTickerProvider
                         crossAxisCount: TabletDetector.isTablet() ? 3 : 2,
                         mainAxisSpacing: 22,
                         crossAxisSpacing: 22,
-                        mainAxisExtent: 195
+                        mainAxisExtent: 215
                       ), 
                       padding: const EdgeInsets.only(
                         right: 21,
@@ -246,7 +246,7 @@ class _ProvidersPageState extends State<ProvidersPage> with SingleTickerProvider
                         crossAxisCount: TabletDetector.isTablet() ? 3 : 2,
                         mainAxisSpacing: 22,
                         crossAxisSpacing: 22,
-                        mainAxisExtent: 195
+                        mainAxisExtent: 215
                       ), 
                       padding: const EdgeInsets.only(
                         right: 21,

@@ -98,7 +98,7 @@ class _SingleContentPageState extends State<SingleContentPage> {
 
   Future getNote() async {
 
-    note = await PersonalNoteService.getNote(content!.id!, singleContentData!.contentType!);
+    note = await PersonalNoteService.getNote(content!.id!, (singleContentData?.contentType ?? content?.type ?? ''));
 
     setState(() {});
 

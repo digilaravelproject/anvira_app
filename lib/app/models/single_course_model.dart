@@ -1426,7 +1426,7 @@ class ReviewModel {
     user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
     createdAt = json['created_at'];
     description = json['description'];
-    rate = json['rate'];
+    rate = json['rate']?.toString();
     rateType = json['rate_type'] != null
         ? RateType.fromJson(json['rate_type'])
         : null;

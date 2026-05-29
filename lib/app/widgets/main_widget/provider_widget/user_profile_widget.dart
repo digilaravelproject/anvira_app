@@ -239,7 +239,7 @@ class UserProfileWidget{
 
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: TabletDetector.isTablet() ? 3 : 2,
-        mainAxisExtent: 190,
+        mainAxisExtent: 215,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
       ),
@@ -276,7 +276,7 @@ class UserProfileWidget{
 
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: TabletDetector.isTablet() ? 3 : 2,
-        mainAxisExtent: 200,
+        mainAxisExtent: 215,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16
       ),
@@ -384,7 +384,7 @@ class UserProfileWidget{
         crossAxisCount: TabletDetector.isTablet() ? 3 : 2,
         mainAxisSpacing: 22,
         crossAxisSpacing: 22,
-        mainAxisExtent: 195
+        mainAxisExtent: 215
       ), 
       padding: const EdgeInsets.only(
         right: 21,

@@ -518,37 +518,49 @@ Widget courseItem(CourseModel courseData,{bool isSmallSize=true,double width = 1
               
                         if(CourseUtils.checkType(courseData) == CourseType.live)...{
                           if(courseData.startDate != null)...{
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SvgPicture.asset(AppAssets.calendarSvg),
-                                
-                                space(0,width: 4),
-                
-                                Text(
-                                  DateTime.fromMillisecondsSinceEpoch(courseData.startDate! *  1000, isUtc: true).toDate(),
-                                  style: style10Regular().copyWith(color: greyB2),
-                                ),
-                                
-                              ],
+                            Expanded(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SvgPicture.asset(AppAssets.calendarSvg),
+                                  
+                                  space(0,width: 4),
+                  
+                                  Expanded(
+                                    child: Text(
+                                      DateTime.fromMillisecondsSinceEpoch(courseData.startDate! *  1000, isUtc: true).toDate(),
+                                      style: style10Regular().copyWith(color: greyB2),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  
+                                ],
+                              ),
                             ),
                           }
                           
                         }else if(CourseUtils.checkType(courseData) == CourseType.video)...{
               
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SvgPicture.asset(AppAssets.timeSvg,colorFilter: ColorFilter.mode(greyB2, BlendMode.srcIn)),
-                              
-                              space(0,width: 4),
-              
-                              Text(
-                                '${durationToString(courseData.duration ?? 0)} ${appText.hours}',
-                                style: style10Regular().copyWith(color: greyB2),
-                              ),
-                              
-                            ],
+                          Expanded(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgPicture.asset(AppAssets.timeSvg,colorFilter: ColorFilter.mode(greyB2, BlendMode.srcIn)),
+                                
+                                space(0,width: 4),
+                
+                                Expanded(
+                                  child: Text(
+                                    '${durationToString(courseData.duration ?? 0)} ${appText.hours}',
+                                    style: style10Regular().copyWith(color: greyB2),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                
+                              ],
+                            ),
                           ),
               
                         },

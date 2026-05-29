@@ -187,7 +187,7 @@ class _FinancialPageState extends State<FinancialPage>  with SingleTickerProvide
                       setState(() {});
 
                       if(link != null){
-                        bool? res = await nextRoute(WebViewPage.pageName, arguments: [link, appText.charge, false, LoadRequestMethod.get]);
+                        bool? res = await nextRoute(WebViewPage.pageName, arguments: [link, appText.charge, true, LoadRequestMethod.get]);
                         
                         if(res ?? false){
                           getSummaryData();
