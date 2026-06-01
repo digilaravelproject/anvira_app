@@ -7,5 +7,5 @@ class AssetsRes {
   AssetsRes._();
 
   static const String PROJECT_NAME = 'webinar';
-  static const String PROJECT_VERSION = '1.0.0+1';
+  static const String PROJECT_VERSION = '1.0.0+2';
 }
