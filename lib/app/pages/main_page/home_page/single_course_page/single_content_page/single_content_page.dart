@@ -9,6 +9,7 @@ import 'package:webinar/app/models/note_model.dart';
 import 'package:webinar/app/models/single_content_model.dart';
 import 'package:webinar/app/pages/main_page/home_page/single_course_page/single_content_page/pdf_viewer_page.dart';
 import 'package:webinar/app/pages/main_page/home_page/single_course_page/single_content_page/web_view_page.dart';
+import 'package:webinar/app/pages/main_page/home_page/single_course_page/single_content_page/youtube_view_page.dart';
 import 'package:webinar/app/services/guest_service/course_service.dart';
 import 'package:webinar/app/services/user_service/personal_note_service.dart';
 import 'package:webinar/common/common.dart';
@@ -129,8 +130,6 @@ class _SingleContentPageState extends State<SingleContentPage> {
   @override
   Widget build(BuildContext context) {
 
-    // print(content?.storage ?? '');
-    // print(content?.downloadable == 1 || ( content?.type == 'file' && ([ 'upload_archive', 'external_link', 'google_drive', 'iframe', 'secure_host', 'upload' ].contains(content?.storage ?? '')) ));
     return directionality(
       child: Scaffold(
         
@@ -655,7 +654,6 @@ class _SingleContentPageState extends State<SingleContentPage> {
                           case 'upload_archive':
                           case 'external_link':
                           case 'google_drive':
-                          case 'iframe':
                           case 'secure_host':
                             
                             nextRoute(
@@ -668,6 +666,34 @@ class _SingleContentPageState extends State<SingleContentPage> {
                               ]
                             );
                             return;
+
+                          case 'iframe': {
+                            final file = singleContentData?.file ?? '';
+                            final start = file.indexOf('youtube.com/embed/');
+                            if (start != -1) {
+                              final idStart = start + 'youtube.com/embed/'.length;
+                              final sub = file.substring(idStart);
+                              final end = sub.indexOf(RegExp(r'[?"\s>]'));
+                              final videoId = end == -1 ? sub : sub.substring(0, end);
+                              if (videoId.isNotEmpty) {
+                                nextRoute(
+                                  YoutubeViewPage.pageName,
+                                  arguments: [videoId, singleContentData?.title]
+                                );
+                                return;
+                              }
+                            }
+                            nextRoute(
+                              WebViewPage.pageName, 
+                              arguments: [
+                                singleContentData?.file, 
+                                singleContentData?.title,
+                                true,
+                                LoadRequestMethod.get
+                              ]
+                            );
+                            return;
+                          }
 
                           case 's3': {
                             if(singleContentData?.fileType != 'video'){

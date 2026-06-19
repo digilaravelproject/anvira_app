@@ -7,7 +7,7 @@ class FontRes {
   FontRes._();
 
   static const String PROJECT_NAME = 'webinar';
-  static const String PROJECT_VERSION = '1.0.0+2';
+  static const String PROJECT_VERSION = '1.0.3+3';
   static const String SF_PRO_BOLD = 'sf-pro-bold';
   static const String SF_PRO_REGULAR = 'sf-pro-regular';
   static const String VAZIR_BOLD = 'vazir-bold';

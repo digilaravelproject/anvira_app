@@ -7,6 +7,8 @@ class ErrorHandler{
 
   showError(ErrorEnum type,dynamic jsonResponse,{String? title,bool readMessage=false}){
 
+    String? message;
+
     if(!readMessage){
       List<String> errors = [];
       
@@ -15,11 +17,14 @@ class ErrorHandler{
       });
 
       if(errors.isNotEmpty){
-        showSnackBar(type, null, desc: errors.first);
+        message = errors.first;
       }
+    }
 
-    }else{
-      showSnackBar(type, null, desc: jsonResponse['message']);
+    message ??= jsonResponse['message']?.toString();
+
+    if(message != null && message.isNotEmpty){
+      showSnackBar(type, null, desc: message);
     }
     
   }

@@ -15,6 +15,7 @@ import 'package:webinar/app/pages/main_page/home_page/meetings_page/meeting_deta
 import 'package:webinar/app/pages/main_page/home_page/payment_status_page/payment_status_page.dart';
 import 'package:webinar/app/pages/main_page/home_page/single_course_page/single_content_page/pdf_viewer_page.dart';
 import 'package:webinar/app/pages/main_page/home_page/single_course_page/single_content_page/web_view_page.dart';
+import 'package:webinar/app/pages/main_page/home_page/single_course_page/single_content_page/youtube_view_page.dart';
 import 'package:webinar/app/pages/offline_page/internet_connection_page.dart';
 import 'package:webinar/app/pages/offline_page/offline_list_course_page.dart';
 import 'package:webinar/app/pages/offline_page/offline_single_content_page.dart';
@@ -193,6 +194,7 @@ class MyApp extends StatelessWidget {
               CheckoutPage.pageName : (context) => const CheckoutPage(),
               SingleContentPage.pageName : (context) => const SingleContentPage(),
               WebViewPage.pageName : (context) => const WebViewPage(),
+              YoutubeViewPage.pageName : (context) => const YoutubeViewPage(),
               BankAccountsPage.pageName : (context) => const BankAccountsPage(),
               UserProfilePage.pageName : (context) => const UserProfilePage(),
               ProvidersPage.pageName : (context) => const ProvidersPage(),
